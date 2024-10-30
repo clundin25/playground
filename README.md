@@ -6,13 +6,12 @@ This code will include a panic in the "release" binary:
 use zerocopy::{native_endian::U32, FromBytes};
 
 fn main() {
-    let q = [0x1, 0x1, 0x1, 0x1];
-    let y = U32::ref_from_bytes(&q).unwrap();
-    let _ = y.get();
+    let q = [0x1, 0x1, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0xA];
+    let count = q.len() / size_of::<u32>();
+    let (word_buf, _suffix) = <[u32]>::ref_from_prefix_with_elems(&q, count).unwrap();
 
-    let mut p = [0x1, 0x1, 0x1, 0x1];
-    let z = U32::mut_from_bytes(&mut p).unwrap();
-    z.set(3);
+    let mut p = [0x1, 0x1, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0xA];
+    let (mut writeable_word_buf, _suffix) = <[u32]>::mut_from_prefix_with_elems(&mut p, count).unwrap();
 }
 ```
 
@@ -22,12 +21,8 @@ The following code does not include a panic. It does not matter which segment is
 use zerocopy::{native_endian::U32, FromBytes};
 
 fn main() {
-    let q = [0x1, 0x1, 0x1, 0x1];
-    let y = U32::ref_from_bytes(&q).unwrap();
-    let _ = y.get();
-
-    //let mut p = [0x1, 0x1, 0x1, 0x1];
-    //let z = U32::mut_from_bytes(&mut p).unwrap();
-    //z.set(3);
+    let q = [0x1, 0x1, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0xA];
+    let count = q.len() / size_of::<u32>();
+    let (word_buf, _suffix) = <[u32]>::ref_from_prefix_with_elems(&q, count).unwrap();
 }
 ```
