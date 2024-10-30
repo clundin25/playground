@@ -3,7 +3,8 @@ This repo documents a scenario that prevents the compiler from optimizing away `
 This code will include a panic in the "release" binary:
 
 ```rust
-use zerocopy::{native_endian::U32, FromBytes};
+use core::mem::size_of;
+use zerocopy::FromBytes;
 
 fn main() {
     let q = [0x1, 0x1, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0xA];
@@ -18,7 +19,8 @@ fn main() {
 The following code does not include a panic. It does not matter which segment is commented.
 
 ```rust
-use zerocopy::{native_endian::U32, FromBytes};
+use core::mem::size_of;
+use zerocopy::FromBytes;
 
 fn main() {
     let q = [0x1, 0x1, 0x1, 0x1, 0x2, 0x2, 0x2, 0x2, 0xA];
